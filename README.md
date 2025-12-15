@@ -189,8 +189,8 @@ These rule packs reflect real-world retailer onboarding behavior and demonstrate
 
 ```bash
 # Clone the repository
-git clone https://github.com/itsbrianhughes/PROJECT-4-EDI-COMPLIANCE-RULES-ENGINE.git
-cd PROJECT-4-EDI-COMPLIANCE-RULES-ENGINE
+git clone https://github.com/itsbrianhughes/edi-compliance-rules-engine.git
+cd edi-compliance-rules-engine
 
 # Install dependencies
 pip install -r requirements.txt
@@ -263,7 +263,7 @@ else:
 ## Project Structure
 
 ```
-PROJECT-4-EDI-COMPLIANCE-RULES-ENGINE/
+edi-compliance-rules-engine/
 ├── src/
 │   ├── parser/
 │   │   ├── edi_parser.py           # Main EDI parser class
@@ -574,7 +574,7 @@ These are candidates for future enhancements.
 **Solution:**
 ```bash
 # Ensure you're in the project root directory
-cd PROJECT-4-EDI-COMPLIANCE-RULES-ENGINE
+cd edi-compliance-rules-engine
 
 # Install dependencies
 pip install -r requirements.txt
@@ -621,8 +621,8 @@ Built by Brian Hughes as part of an EDI Integration Engineering portfolio.
 **Ready to validate your EDI documents? Get started:**
 
 ```bash
-git clone https://github.com/itsbrianhughes/PROJECT-4-EDI-COMPLIANCE-RULES-ENGINE.git
-cd PROJECT-4-EDI-COMPLIANCE-RULES-ENGINE
+git clone https://github.com/itsbrianhughes/edi-compliance-rules-engine.git
+cd edi-compliance-rules-engine
 pip install -r requirements.txt
 streamlit run src/ui/streamlit_app.py
 ```
