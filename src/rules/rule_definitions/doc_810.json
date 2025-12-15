@@ -1,0 +1,322 @@
+{
+  "ruleset_info": {
+    "name": "X12 810 Invoice Rules",
+    "version": "1.0",
+    "description": "Document-specific validation rules for 810 Invoice transaction sets",
+    "scope": "document",
+    "doc_type": "810",
+    "x12_version": "004010"
+  },
+  "required_segments": [
+    {
+      "rule_id": "810_REQ_BIG",
+      "segment_id": "BIG",
+      "description": "Beginning Segment for Invoice is required",
+      "severity": "ERROR",
+      "min_occurrences": 1,
+      "max_occurrences": 1
+    },
+    {
+      "rule_id": "810_REQ_IT1",
+      "segment_id": "IT1",
+      "description": "At least one Baseline Item Data (Invoice) is required",
+      "severity": "ERROR",
+      "min_occurrences": 1,
+      "max_occurrences": null
+    },
+    {
+      "rule_id": "810_REQ_TDS",
+      "segment_id": "TDS",
+      "description": "Total Monetary Value Summary is required",
+      "severity": "ERROR",
+      "min_occurrences": 1,
+      "max_occurrences": 1
+    },
+    {
+      "rule_id": "810_REQ_CTT",
+      "segment_id": "CTT",
+      "description": "Transaction Totals segment is required",
+      "severity": "WARNING",
+      "min_occurrences": 1,
+      "max_occurrences": 1
+    }
+  ],
+  "element_rules": [
+    {
+      "rule_id": "810_BIG01_DATE",
+      "segment_id": "BIG",
+      "element_position": "01",
+      "description": "BIG01 Invoice Date must be in CCYYMMDD format",
+      "severity": "ERROR",
+      "validations": {
+        "data_type": "DT",
+        "min_length": 8,
+        "max_length": 8,
+        "regex": "^[0-9]{8}$"
+      }
+    },
+    {
+      "rule_id": "810_BIG02_INVOICE_NUMBER",
+      "segment_id": "BIG",
+      "element_position": "02",
+      "description": "BIG02 Invoice Number is required",
+      "severity": "ERROR",
+      "validations": {
+        "data_type": "AN",
+        "min_length": 1,
+        "max_length": 22,
+        "required": true
+      }
+    },
+    {
+      "rule_id": "810_BIG04_PO_NUMBER",
+      "segment_id": "BIG",
+      "element_position": "04",
+      "description": "BIG04 Purchase Order Number is recommended",
+      "severity": "WARNING",
+      "validations": {
+        "data_type": "AN",
+        "min_length": 1,
+        "max_length": 22
+      }
+    },
+    {
+      "rule_id": "810_IT101_LINE_NUMBER",
+      "segment_id": "IT1",
+      "element_position": "01",
+      "description": "IT101 Assigned Identification (line number) is required",
+      "severity": "ERROR",
+      "validations": {
+        "data_type": "AN",
+        "min_length": 1,
+        "max_length": 20
+      }
+    },
+    {
+      "rule_id": "810_IT102_QUANTITY",
+      "segment_id": "IT1",
+      "element_position": "02",
+      "description": "IT102 Quantity Invoiced must be numeric",
+      "severity": "ERROR",
+      "validations": {
+        "data_type": "R",
+        "min_length": 1,
+        "max_length": 15,
+        "regex": "^[0-9]+(\\.[0-9]+)?$"
+      }
+    },
+    {
+      "rule_id": "810_IT103_UOM",
+      "segment_id": "IT1",
+      "element_position": "03",
+      "description": "IT103 Unit of Measure Code is required when quantity is present",
+      "severity": "ERROR",
+      "validations": {
+        "data_type": "ID",
+        "min_length": 2,
+        "max_length": 2
+      }
+    },
+    {
+      "rule_id": "810_IT104_UNIT_PRICE",
+      "segment_id": "IT1",
+      "element_position": "04",
+      "description": "IT104 Unit Price must be numeric",
+      "severity": "ERROR",
+      "validations": {
+        "data_type": "R",
+        "min_length": 1,
+        "max_length": 17,
+        "regex": "^[0-9]+(\\.[0-9]+)?$"
+      }
+    },
+    {
+      "rule_id": "810_TDS01_AMOUNT",
+      "segment_id": "TDS",
+      "element_position": "01",
+      "description": "TDS01 Total Invoice Amount is required and must be numeric",
+      "severity": "ERROR",
+      "validations": {
+        "data_type": "N2",
+        "min_length": 1,
+        "max_length": 15,
+        "regex": "^[0-9]+$",
+        "required": true
+      }
+    },
+    {
+      "rule_id": "810_N101_ENTITY_ID",
+      "segment_id": "N1",
+      "element_position": "01",
+      "description": "N101 Entity Identifier Code must be valid",
+      "severity": "ERROR",
+      "validations": {
+        "data_type": "ID",
+        "min_length": 2,
+        "max_length": 3,
+        "allowed_values": ["BT", "ST", "RE", "BY", "VN", "II", "SU", "SF", "SO", "ZZ"]
+      }
+    },
+    {
+      "rule_id": "810_N102_NAME",
+      "segment_id": "N1",
+      "element_position": "02",
+      "description": "N102 Name is required",
+      "severity": "ERROR",
+      "validations": {
+        "data_type": "AN",
+        "min_length": 1,
+        "max_length": 60
+      }
+    },
+    {
+      "rule_id": "810_REF01_REFERENCE_QUAL",
+      "segment_id": "REF",
+      "element_position": "01",
+      "description": "REF01 Reference Identification Qualifier must be valid",
+      "severity": "ERROR",
+      "validations": {
+        "data_type": "ID",
+        "min_length": 2,
+        "max_length": 3,
+        "allowed_values": ["DP", "IA", "PK", "VN", "ZZ"]
+      }
+    },
+    {
+      "rule_id": "810_DTM01_DATE_QUAL",
+      "segment_id": "DTM",
+      "element_position": "01",
+      "description": "DTM01 Date/Time Qualifier must be valid",
+      "severity": "ERROR",
+      "validations": {
+        "data_type": "ID",
+        "min_length": 3,
+        "max_length": 3,
+        "allowed_values": ["003", "004", "011", "035", "036", "037"]
+      }
+    },
+    {
+      "rule_id": "810_CTT01_LINE_ITEM_COUNT",
+      "segment_id": "CTT",
+      "element_position": "01",
+      "description": "CTT01 Number of Line Items must be numeric",
+      "severity": "ERROR",
+      "validations": {
+        "data_type": "N0",
+        "min_length": 1,
+        "max_length": 6,
+        "regex": "^[0-9]+$"
+      }
+    }
+  ],
+  "conditional_rules": [
+    {
+      "rule_id": "810_COND_N1_BT_ADDRESS",
+      "description": "If N1 segment has BT qualifier (Bill To), N3 and N4 are required",
+      "severity": "ERROR",
+      "condition": {
+        "if_segment": "N1",
+        "if_element": "01",
+        "if_value": "BT"
+      },
+      "then": {
+        "required_segments": ["N3", "N4"],
+        "within_loop": "N1",
+        "message": "Bill-To address requires N3 (street address) and N4 (city/state/zip) segments"
+      }
+    },
+    {
+      "rule_id": "810_COND_N1_ST_ADDRESS",
+      "description": "If N1 segment has ST qualifier (Ship To), N3 and N4 are recommended",
+      "severity": "WARNING",
+      "condition": {
+        "if_segment": "N1",
+        "if_element": "01",
+        "if_value": "ST"
+      },
+      "then": {
+        "recommended_segments": ["N3", "N4"],
+        "within_loop": "N1",
+        "message": "Ship-To address should include N3 (street address) and N4 (city/state/zip) segments"
+      }
+    },
+    {
+      "rule_id": "810_COND_IT102_IT103_PAIR",
+      "description": "If IT102 (quantity) is present, IT103 (unit of measure) is required",
+      "severity": "ERROR",
+      "condition": {
+        "if_segment": "IT1",
+        "if_element": "02",
+        "if_value_exists": true
+      },
+      "then": {
+        "required_element": {
+          "segment": "IT1",
+          "element": "03"
+        },
+        "message": "IT103 Unit of Measure is required when IT102 Quantity is present"
+      }
+    },
+    {
+      "rule_id": "810_COND_BIG04_PRESENT",
+      "description": "BIG04 Purchase Order Number should be present for order-based invoices",
+      "severity": "WARNING",
+      "condition": {
+        "if_segment": "BIG",
+        "if_element": "04",
+        "if_value_missing": true
+      },
+      "then": {
+        "message": "Purchase Order Number (BIG04) is recommended for order-based invoices"
+      }
+    }
+  ],
+  "cross_segment_rules": [
+    {
+      "rule_id": "810_CROSS_CTT_IT1_COUNT",
+      "description": "CTT01 line item count should match number of IT1 segments",
+      "severity": "WARNING",
+      "segments_involved": ["CTT", "IT1"],
+      "validation_logic": {
+        "type": "count_match",
+        "source_segment": "IT1",
+        "target_segment": "CTT",
+        "target_element": "01",
+        "message": "CTT01 value does not match actual number of IT1 line items"
+      }
+    },
+    {
+      "rule_id": "810_CROSS_N1_BT_REQUIRED",
+      "description": "At least one N1 segment with BT (Bill To) qualifier must be present",
+      "severity": "ERROR",
+      "segments_involved": ["N1"],
+      "validation_logic": {
+        "type": "element_value_exists",
+        "segment_id": "N1",
+        "element_position": "01",
+        "required_value": "BT",
+        "message": "Invoice must contain Bill-To party (N1*BT)"
+      }
+    },
+    {
+      "rule_id": "810_CROSS_TDS_CALCULATION",
+      "description": "TDS01 total amount should equal sum of all line item amounts",
+      "severity": "WARNING",
+      "segments_involved": ["IT1", "TDS"],
+      "validation_logic": {
+        "type": "mathematical_validation",
+        "formula": "sum(IT102 * IT104) == TDS01",
+        "message": "TDS01 total does not match sum of line item amounts (quantity * unit price)",
+        "tolerance": 0.01
+      }
+    }
+  ],
+  "segment_sequences": [
+    {
+      "rule_id": "810_SEQ_N1_LOOP",
+      "description": "N1 loop segments should appear in order: N1, N2 (optional), N3 (optional), N4 (optional)",
+      "severity": "WARNING",
+      "sequence": ["N1", "N2?", "N3?", "N4?"]
+    }
+  ]
+}

@@ -1,0 +1,333 @@
+{
+  "ruleset_info": {
+    "name": "X12 850 Purchase Order Rules",
+    "version": "1.0",
+    "description": "Document-specific validation rules for 850 Purchase Order transaction sets",
+    "scope": "document",
+    "doc_type": "850",
+    "x12_version": "004010"
+  },
+  "required_segments": [
+    {
+      "rule_id": "850_REQ_BEG",
+      "segment_id": "BEG",
+      "description": "Beginning Segment for Purchase Order is required",
+      "severity": "ERROR",
+      "min_occurrences": 1,
+      "max_occurrences": 1
+    },
+    {
+      "rule_id": "850_REQ_PO1",
+      "segment_id": "PO1",
+      "description": "At least one Baseline Item Data (line item) is required",
+      "severity": "ERROR",
+      "min_occurrences": 1,
+      "max_occurrences": null
+    },
+    {
+      "rule_id": "850_REQ_CTT",
+      "segment_id": "CTT",
+      "description": "Transaction Totals segment is required",
+      "severity": "WARNING",
+      "min_occurrences": 1,
+      "max_occurrences": 1
+    }
+  ],
+  "element_rules": [
+    {
+      "rule_id": "850_BEG01_PURPOSE",
+      "segment_id": "BEG",
+      "element_position": "01",
+      "description": "BEG01 Transaction Set Purpose Code must be valid",
+      "severity": "ERROR",
+      "validations": {
+        "data_type": "ID",
+        "min_length": 2,
+        "max_length": 2,
+        "allowed_values": ["00", "01", "02", "03", "04", "05", "06", "07", "08", "10", "11", "12", "13", "14", "15", "16", "17", "18", "19", "20", "21", "22", "24", "25", "26", "27", "28", "30", "31", "32", "33", "34", "35", "36", "37", "38", "39", "40", "41", "42", "43", "44", "45", "46", "47", "48", "49", "50", "51", "52", "53", "77", "CN", "CP", "DI", "GR", "KN", "PO", "RE", "RF", "RM", "RP", "UR"]
+      }
+    },
+    {
+      "rule_id": "850_BEG02_PO_TYPE",
+      "segment_id": "BEG",
+      "element_position": "02",
+      "description": "BEG02 Purchase Order Type Code must be valid",
+      "severity": "ERROR",
+      "validations": {
+        "data_type": "ID",
+        "min_length": 2,
+        "max_length": 2,
+        "allowed_values": ["AS", "BK", "CF", "DS", "KA", "KD", "KE", "KN", "KQ", "KT", "LC", "NE", "OS", "RA", "RE", "RL", "RO", "SA", "SO", "SS", "ST", "SU", "SW", "TC", "TE", "WO", "ZZ"]
+      }
+    },
+    {
+      "rule_id": "850_BEG03_PO_NUMBER",
+      "segment_id": "BEG",
+      "element_position": "03",
+      "description": "BEG03 Purchase Order Number is required",
+      "severity": "ERROR",
+      "validations": {
+        "data_type": "AN",
+        "min_length": 1,
+        "max_length": 22,
+        "required": true
+      }
+    },
+    {
+      "rule_id": "850_BEG05_DATE",
+      "segment_id": "BEG",
+      "element_position": "05",
+      "description": "BEG05 Date must be in CCYYMMDD format",
+      "severity": "ERROR",
+      "validations": {
+        "data_type": "DT",
+        "min_length": 8,
+        "max_length": 8,
+        "regex": "^[0-9]{8}$"
+      }
+    },
+    {
+      "rule_id": "850_PO101_LINE_NUMBER",
+      "segment_id": "PO1",
+      "element_position": "01",
+      "description": "PO101 Assigned Identification (line number) is required",
+      "severity": "ERROR",
+      "validations": {
+        "data_type": "AN",
+        "min_length": 1,
+        "max_length": 20
+      }
+    },
+    {
+      "rule_id": "850_PO102_QUANTITY",
+      "segment_id": "PO1",
+      "element_position": "02",
+      "description": "PO102 Quantity Ordered must be numeric",
+      "severity": "ERROR",
+      "validations": {
+        "data_type": "R",
+        "min_length": 1,
+        "max_length": 15,
+        "regex": "^[0-9]+(\\.[0-9]+)?$"
+      }
+    },
+    {
+      "rule_id": "850_PO103_UOM",
+      "segment_id": "PO1",
+      "element_position": "03",
+      "description": "PO103 Unit of Measure Code is required when quantity is present",
+      "severity": "ERROR",
+      "validations": {
+        "data_type": "ID",
+        "min_length": 2,
+        "max_length": 2
+      }
+    },
+    {
+      "rule_id": "850_PO104_UNIT_PRICE",
+      "segment_id": "PO1",
+      "element_position": "04",
+      "description": "PO104 Unit Price must be numeric",
+      "severity": "WARNING",
+      "validations": {
+        "data_type": "R",
+        "min_length": 1,
+        "max_length": 17,
+        "regex": "^[0-9]+(\\.[0-9]+)?$"
+      }
+    },
+    {
+      "rule_id": "850_N101_ENTITY_ID",
+      "segment_id": "N1",
+      "element_position": "01",
+      "description": "N101 Entity Identifier Code must be valid",
+      "severity": "ERROR",
+      "validations": {
+        "data_type": "ID",
+        "min_length": 2,
+        "max_length": 3,
+        "allowed_values": ["BY", "ST", "BT", "SE", "VN", "AG", "CA", "RI", "SU", "SH", "SF", "SO", "ZZ"]
+      }
+    },
+    {
+      "rule_id": "850_N102_NAME",
+      "segment_id": "N1",
+      "element_position": "02",
+      "description": "N102 Name is required",
+      "severity": "ERROR",
+      "validations": {
+        "data_type": "AN",
+        "min_length": 1,
+        "max_length": 60
+      }
+    },
+    {
+      "rule_id": "850_N103_ID_CODE_QUAL",
+      "segment_id": "N1",
+      "element_position": "03",
+      "description": "N103 Identification Code Qualifier must be valid when present",
+      "severity": "WARNING",
+      "validations": {
+        "data_type": "ID",
+        "min_length": 1,
+        "max_length": 2,
+        "allowed_values": ["1", "2", "9", "10", "11", "12", "15", "92", "93", "94", "ZZ"]
+      }
+    },
+    {
+      "rule_id": "850_REF02_REFERENCE",
+      "segment_id": "REF",
+      "element_position": "02",
+      "description": "REF02 Reference Identification is required",
+      "severity": "ERROR",
+      "validations": {
+        "data_type": "AN",
+        "min_length": 1,
+        "max_length": 50
+      }
+    },
+    {
+      "rule_id": "850_DTM02_DATE",
+      "segment_id": "DTM",
+      "element_position": "02",
+      "description": "DTM02 Date must be in valid format",
+      "severity": "ERROR",
+      "validations": {
+        "data_type": "DT",
+        "min_length": 8,
+        "max_length": 8,
+        "regex": "^[0-9]{8}$"
+      }
+    },
+    {
+      "rule_id": "850_CTT01_LINE_ITEM_COUNT",
+      "segment_id": "CTT",
+      "element_position": "01",
+      "description": "CTT01 Number of Line Items must be numeric",
+      "severity": "ERROR",
+      "validations": {
+        "data_type": "N0",
+        "min_length": 1,
+        "max_length": 6,
+        "regex": "^[0-9]+$"
+      }
+    }
+  ],
+  "conditional_rules": [
+    {
+      "rule_id": "850_COND_N1_ST_ADDRESS",
+      "description": "If N1 segment has ST qualifier, N3 (address) and N4 (city/state/zip) are required",
+      "severity": "ERROR",
+      "condition": {
+        "if_segment": "N1",
+        "if_element": "01",
+        "if_value": "ST"
+      },
+      "then": {
+        "required_segments": ["N3", "N4"],
+        "within_loop": "N1",
+        "message": "Ship-To address requires N3 (street address) and N4 (city/state/zip) segments"
+      }
+    },
+    {
+      "rule_id": "850_COND_N1_BT_ADDRESS",
+      "description": "If N1 segment has BT qualifier, N3 and N4 are required",
+      "severity": "ERROR",
+      "condition": {
+        "if_segment": "N1",
+        "if_element": "01",
+        "if_value": "BT"
+      },
+      "then": {
+        "required_segments": ["N3", "N4"],
+        "within_loop": "N1",
+        "message": "Bill-To address requires N3 (street address) and N4 (city/state/zip) segments"
+      }
+    },
+    {
+      "rule_id": "850_COND_N1_BY_ADDRESS",
+      "description": "If N1 segment has BY qualifier, N3 and N4 are recommended",
+      "severity": "WARNING",
+      "condition": {
+        "if_segment": "N1",
+        "if_element": "01",
+        "if_value": "BY"
+      },
+      "then": {
+        "required_segments": ["N3", "N4"],
+        "within_loop": "N1",
+        "message": "Buyer address should include N3 (street address) and N4 (city/state/zip) segments"
+      }
+    },
+    {
+      "rule_id": "850_COND_N103_N104_PAIR",
+      "description": "If N103 (ID Code Qualifier) is present, N104 (ID Code) is required",
+      "severity": "ERROR",
+      "condition": {
+        "if_segment": "N1",
+        "if_element": "03",
+        "if_value_exists": true
+      },
+      "then": {
+        "required_element": {
+          "segment": "N1",
+          "element": "04"
+        },
+        "message": "N104 Identification Code is required when N103 Qualifier is present"
+      }
+    },
+    {
+      "rule_id": "850_COND_PO102_PO103_PAIR",
+      "description": "If PO102 (quantity) is present, PO103 (unit of measure) is required",
+      "severity": "ERROR",
+      "condition": {
+        "if_segment": "PO1",
+        "if_element": "02",
+        "if_value_exists": true
+      },
+      "then": {
+        "required_element": {
+          "segment": "PO1",
+          "element": "03"
+        },
+        "message": "PO103 Unit of Measure is required when PO102 Quantity is present"
+      }
+    }
+  ],
+  "cross_segment_rules": [
+    {
+      "rule_id": "850_CROSS_CTT_PO1_COUNT",
+      "description": "CTT01 line item count should match number of PO1 segments",
+      "severity": "WARNING",
+      "segments_involved": ["CTT", "PO1"],
+      "validation_logic": {
+        "type": "count_match",
+        "source_segment": "PO1",
+        "target_segment": "CTT",
+        "target_element": "01",
+        "message": "CTT01 value does not match actual number of PO1 line items"
+      }
+    },
+    {
+      "rule_id": "850_CROSS_N1_ST_REQUIRED",
+      "description": "At least one N1 segment with ST (Ship To) qualifier should be present",
+      "severity": "ERROR",
+      "segments_involved": ["N1"],
+      "validation_logic": {
+        "type": "element_value_exists",
+        "segment_id": "N1",
+        "element_position": "01",
+        "required_value": "ST",
+        "message": "Purchase Order must contain Ship-To party (N1*ST)"
+      }
+    }
+  ],
+  "segment_sequences": [
+    {
+      "rule_id": "850_SEQ_N1_LOOP",
+      "description": "N1 loop segments should appear in order: N1, N2 (optional), N3 (optional), N4 (optional), REF (optional)",
+      "severity": "WARNING",
+      "sequence": ["N1", "N2?", "N3?", "N4?", "REF*"]
+    }
+  ]
+}

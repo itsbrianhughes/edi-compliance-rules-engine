@@ -1,0 +1,268 @@
+{
+  "ruleset_info": {
+    "name": "X12 Core Rules",
+    "version": "1.0",
+    "description": "Universal X12 EDI envelope and structure requirements",
+    "scope": "core",
+    "applies_to": "all"
+  },
+  "required_segments": [
+    {
+      "rule_id": "CORE_REQ_ISA",
+      "segment_id": "ISA",
+      "description": "Interchange Control Header is required",
+      "severity": "ERROR",
+      "min_occurrences": 1,
+      "max_occurrences": 1
+    },
+    {
+      "rule_id": "CORE_REQ_GS",
+      "segment_id": "GS",
+      "description": "Functional Group Header is required",
+      "severity": "ERROR",
+      "min_occurrences": 1,
+      "max_occurrences": null
+    },
+    {
+      "rule_id": "CORE_REQ_ST",
+      "segment_id": "ST",
+      "description": "Transaction Set Header is required",
+      "severity": "ERROR",
+      "min_occurrences": 1,
+      "max_occurrences": null
+    },
+    {
+      "rule_id": "CORE_REQ_SE",
+      "segment_id": "SE",
+      "description": "Transaction Set Trailer is required",
+      "severity": "ERROR",
+      "min_occurrences": 1,
+      "max_occurrences": null
+    },
+    {
+      "rule_id": "CORE_REQ_GE",
+      "segment_id": "GE",
+      "description": "Functional Group Trailer is required",
+      "severity": "ERROR",
+      "min_occurrences": 1,
+      "max_occurrences": null
+    },
+    {
+      "rule_id": "CORE_REQ_IEA",
+      "segment_id": "IEA",
+      "description": "Interchange Control Trailer is required",
+      "severity": "ERROR",
+      "min_occurrences": 1,
+      "max_occurrences": 1
+    }
+  ],
+  "element_rules": [
+    {
+      "rule_id": "CORE_ISA01_AUTH_INFO_QUAL",
+      "segment_id": "ISA",
+      "element_position": "01",
+      "description": "ISA01 Authorization Information Qualifier must be valid",
+      "severity": "ERROR",
+      "validations": {
+        "data_type": "ID",
+        "min_length": 2,
+        "max_length": 2,
+        "allowed_values": ["00", "01", "02", "03", "04", "05", "06"]
+      }
+    },
+    {
+      "rule_id": "CORE_ISA03_SECURITY_INFO_QUAL",
+      "segment_id": "ISA",
+      "element_position": "03",
+      "description": "ISA03 Security Information Qualifier must be valid",
+      "severity": "ERROR",
+      "validations": {
+        "data_type": "ID",
+        "min_length": 2,
+        "max_length": 2,
+        "allowed_values": ["00", "01"]
+      }
+    },
+    {
+      "rule_id": "CORE_ISA05_ID_QUAL",
+      "segment_id": "ISA",
+      "element_position": "05",
+      "description": "ISA05 Interchange ID Qualifier must be valid",
+      "severity": "ERROR",
+      "validations": {
+        "data_type": "ID",
+        "min_length": 2,
+        "max_length": 2,
+        "allowed_values": ["01", "02", "03", "04", "07", "08", "09", "10", "11", "12", "13", "14", "15", "16", "17", "18", "19", "20", "21", "22", "23", "24", "25", "26", "27", "28", "29", "30", "31", "32", "33", "34", "ZZ"]
+      }
+    },
+    {
+      "rule_id": "CORE_ISA07_ID_QUAL",
+      "segment_id": "ISA",
+      "element_position": "07",
+      "description": "ISA07 Interchange ID Qualifier must be valid",
+      "severity": "ERROR",
+      "validations": {
+        "data_type": "ID",
+        "min_length": 2,
+        "max_length": 2,
+        "allowed_values": ["01", "02", "03", "04", "07", "08", "09", "10", "11", "12", "13", "14", "15", "16", "17", "18", "19", "20", "21", "22", "23", "24", "25", "26", "27", "28", "29", "30", "31", "32", "33", "34", "ZZ"]
+      }
+    },
+    {
+      "rule_id": "CORE_ISA11_STANDARDS_ID",
+      "segment_id": "ISA",
+      "element_position": "11",
+      "description": "ISA11 Interchange Control Standards Identifier must be 'U' or 'X'",
+      "severity": "ERROR",
+      "validations": {
+        "data_type": "ID",
+        "min_length": 1,
+        "max_length": 1,
+        "allowed_values": ["U", "X"]
+      }
+    },
+    {
+      "rule_id": "CORE_ISA14_ACK_REQUESTED",
+      "segment_id": "ISA",
+      "element_position": "14",
+      "description": "ISA14 Acknowledgment Requested must be valid",
+      "severity": "ERROR",
+      "validations": {
+        "data_type": "ID",
+        "min_length": 1,
+        "max_length": 1,
+        "allowed_values": ["0", "1"]
+      }
+    },
+    {
+      "rule_id": "CORE_ISA15_USAGE_IND",
+      "segment_id": "ISA",
+      "element_position": "15",
+      "description": "ISA15 Usage Indicator must be valid",
+      "severity": "ERROR",
+      "validations": {
+        "data_type": "ID",
+        "min_length": 1,
+        "max_length": 1,
+        "allowed_values": ["P", "T", "I"]
+      }
+    },
+    {
+      "rule_id": "CORE_ST01_TRANS_SET_ID",
+      "segment_id": "ST",
+      "element_position": "01",
+      "description": "ST01 Transaction Set Identifier Code must be valid",
+      "severity": "ERROR",
+      "validations": {
+        "data_type": "ID",
+        "min_length": 3,
+        "max_length": 3,
+        "allowed_values": ["810", "850", "856", "997", "204", "210", "214", "753", "754", "940", "943", "944", "945", "947"]
+      }
+    }
+  ],
+  "cross_segment_rules": [
+    {
+      "rule_id": "CORE_CROSS_SE01_COUNT",
+      "description": "SE01 segment count must match actual segment count between ST and SE",
+      "severity": "WARNING",
+      "segments_involved": ["ST", "SE"],
+      "validation_logic": {
+        "type": "segment_count_validation",
+        "count_element": {
+          "segment_id": "SE",
+          "element_position": "01"
+        },
+        "count_between": ["ST", "SE"],
+        "include_boundaries": true
+      }
+    },
+    {
+      "rule_id": "CORE_CROSS_SE02_CONTROL",
+      "description": "SE02 control number must match ST02",
+      "severity": "ERROR",
+      "segments_involved": ["ST", "SE"],
+      "validation_logic": {
+        "type": "element_match",
+        "match_pairs": [
+          {
+            "segment_1": "ST",
+            "element_1": "02",
+            "segment_2": "SE",
+            "element_2": "02"
+          }
+        ]
+      }
+    },
+    {
+      "rule_id": "CORE_CROSS_GE01_COUNT",
+      "description": "GE01 transaction set count must match number of ST segments",
+      "severity": "WARNING",
+      "segments_involved": ["ST", "GE"],
+      "validation_logic": {
+        "type": "count_match",
+        "source_segment": "ST",
+        "target_segment": "GE",
+        "target_element": "01"
+      }
+    },
+    {
+      "rule_id": "CORE_CROSS_GE02_CONTROL",
+      "description": "GE02 group control number must match GS06",
+      "severity": "ERROR",
+      "segments_involved": ["GS", "GE"],
+      "validation_logic": {
+        "type": "element_match",
+        "match_pairs": [
+          {
+            "segment_1": "GS",
+            "element_1": "06",
+            "segment_2": "GE",
+            "element_2": "02"
+          }
+        ]
+      }
+    },
+    {
+      "rule_id": "CORE_CROSS_IEA01_COUNT",
+      "description": "IEA01 group count must match number of GS segments",
+      "severity": "WARNING",
+      "segments_involved": ["GS", "IEA"],
+      "validation_logic": {
+        "type": "count_match",
+        "source_segment": "GS",
+        "target_segment": "IEA",
+        "target_element": "01"
+      }
+    },
+    {
+      "rule_id": "CORE_CROSS_IEA02_CONTROL",
+      "description": "IEA02 interchange control number must match ISA13",
+      "severity": "ERROR",
+      "segments_involved": ["ISA", "IEA"],
+      "validation_logic": {
+        "type": "element_match",
+        "match_pairs": [
+          {
+            "segment_1": "ISA",
+            "element_1": "13",
+            "segment_2": "IEA",
+            "element_2": "02"
+          }
+        ]
+      }
+    }
+  ],
+  "conditional_rules": [
+    {
+      "rule_id": "CORE_COND_ENVELOPE_ORDER",
+      "description": "Envelope segments must appear in correct order: ISA, GS, ST, [data], SE, GE, IEA",
+      "severity": "ERROR",
+      "condition": {
+        "type": "sequence_validation",
+        "required_sequence": ["ISA", "GS", "ST"]
+      }
+    }
+  ]
+}

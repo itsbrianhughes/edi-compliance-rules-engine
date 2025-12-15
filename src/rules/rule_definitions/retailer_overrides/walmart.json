@@ -1,0 +1,220 @@
+{
+  "ruleset_info": {
+    "name": "Walmart EDI Compliance Requirements",
+    "version": "1.0",
+    "description": "Walmart-specific EDI validation rules and requirements",
+    "scope": "retailer_override",
+    "retailer": "walmart",
+    "applies_to": ["850", "856", "810"]
+  },
+  "required_segments": [
+    {
+      "rule_id": "WALMART_REQ_DTM_010",
+      "segment_id": "DTM",
+      "description": "Walmart requires requested delivery date (DTM*010) in 850 PO",
+      "severity": "ERROR",
+      "min_occurrences": 1,
+      "max_occurrences": 1,
+      "element_filters": {
+        "01": "010"
+      },
+      "applies_to_doc_types": ["850"]
+    },
+    {
+      "rule_id": "WALMART_REQ_REF_DP",
+      "segment_id": "REF",
+      "description": "Walmart requires department number (REF*DP) in 850 PO",
+      "severity": "ERROR",
+      "min_occurrences": 1,
+      "max_occurrences": null,
+      "element_filters": {
+        "01": "DP"
+      },
+      "applies_to_doc_types": ["850"]
+    },
+    {
+      "rule_id": "WALMART_856_REQ_PRO",
+      "segment_id": "REF",
+      "description": "Walmart requires PRO number (REF*CN) in 856 ASN",
+      "severity": "ERROR",
+      "min_occurrences": 1,
+      "max_occurrences": 1,
+      "element_filters": {
+        "01": "CN"
+      },
+      "applies_to_doc_types": ["856"]
+    }
+  ],
+  "element_rules": [
+    {
+      "rule_id": "WALMART_BEG03_PO_FORMAT",
+      "segment_id": "BEG",
+      "element_position": "03",
+      "description": "Walmart PO numbers must be exactly 10 digits",
+      "severity": "ERROR",
+      "validations": {
+        "data_type": "AN",
+        "min_length": 10,
+        "max_length": 10,
+        "regex": "^[0-9]{10}$"
+      },
+      "applies_to_doc_types": ["850"]
+    },
+    {
+      "rule_id": "WALMART_N104_STORE_FORMAT",
+      "segment_id": "N1",
+      "element_position": "04",
+      "description": "Walmart store numbers must be 4 digits when N103 is '92'",
+      "severity": "ERROR",
+      "validations": {
+        "data_type": "AN",
+        "min_length": 4,
+        "max_length": 4,
+        "regex": "^[0-9]{4}$"
+      },
+      "conditional": {
+        "if_element": "03",
+        "equals": "92"
+      },
+      "applies_to_doc_types": ["850", "810"]
+    },
+    {
+      "rule_id": "WALMART_REF02_DEPT_FORMAT",
+      "segment_id": "REF",
+      "element_position": "02",
+      "description": "Walmart department numbers must be 2-3 digits",
+      "severity": "ERROR",
+      "validations": {
+        "data_type": "AN",
+        "min_length": 2,
+        "max_length": 3,
+        "regex": "^[0-9]{2,3}$"
+      },
+      "conditional": {
+        "if_element": "01",
+        "equals": "DP"
+      },
+      "applies_to_doc_types": ["850", "810"]
+    },
+    {
+      "rule_id": "WALMART_856_BSN02_FORMAT",
+      "segment_id": "BSN",
+      "element_position": "02",
+      "description": "Walmart shipment IDs must start with WM",
+      "severity": "WARNING",
+      "validations": {
+        "regex": "^WM.*"
+      },
+      "applies_to_doc_types": ["856"]
+    },
+    {
+      "rule_id": "WALMART_PO106_QUAL",
+      "segment_id": "PO1",
+      "element_position": "06",
+      "description": "Walmart requires product qualifier to be 'VP' (Vendor Part Number)",
+      "severity": "ERROR",
+      "validations": {
+        "data_type": "ID",
+        "allowed_values": ["VP"]
+      },
+      "applies_to_doc_types": ["850"]
+    },
+    {
+      "rule_id": "WALMART_PO107_VPN_FORMAT",
+      "segment_id": "PO1",
+      "element_position": "07",
+      "description": "Walmart vendor part numbers must not exceed 20 characters",
+      "severity": "ERROR",
+      "validations": {
+        "data_type": "AN",
+        "max_length": 20
+      },
+      "applies_to_doc_types": ["850"]
+    }
+  ],
+  "conditional_rules": [
+    {
+      "rule_id": "WALMART_COND_PO1_UPC",
+      "description": "Walmart requires UPC/GTIN in addition to vendor part number",
+      "severity": "WARNING",
+      "condition": {
+        "if_segment": "PO1",
+        "if_element": "06",
+        "if_value": "VP"
+      },
+      "then": {
+        "recommended_element": {
+          "segment": "PO1",
+          "element": "08",
+          "value": "UP"
+        },
+        "message": "Walmart recommends including UPC (PO108=UP, PO109=UPC) in addition to vendor part"
+      },
+      "applies_to_doc_types": ["850"]
+    },
+    {
+      "rule_id": "WALMART_COND_856_SSCC",
+      "description": "Walmart requires SSCC-18 for pallet/carton tracking",
+      "severity": "ERROR",
+      "condition": {
+        "if_segment": "HL",
+        "if_element": "03",
+        "if_value": "P"
+      },
+      "then": {
+        "required_segments": ["MAN"],
+        "within_loop": "HL",
+        "message": "Pallet level (HL*P) requires MAN segment with SSCC-18"
+      },
+      "applies_to_doc_types": ["856"]
+    }
+  ],
+  "cross_segment_rules": [
+    {
+      "rule_id": "WALMART_CROSS_N1_STORE",
+      "description": "Walmart 850 POs must include Ship-To with store number",
+      "severity": "ERROR",
+      "segments_involved": ["N1"],
+      "validation_logic": {
+        "type": "element_pair_exists",
+        "segment_id": "N1",
+        "element_pairs": [
+          {"element": "01", "value": "ST"},
+          {"element": "03", "value": "92"}
+        ],
+        "message": "Walmart POs require N1*ST segment with qualifier 92 (Assigned by Buyer)"
+      },
+      "applies_to_doc_types": ["850"]
+    }
+  ],
+  "overrides": [
+    {
+      "rule_id": "850_REQ_DTM",
+      "override_type": "severity_escalation",
+      "original_severity": "WARNING",
+      "new_severity": "ERROR",
+      "reason": "Walmart requires delivery dates in all purchase orders"
+    },
+    {
+      "rule_id": "850_COND_N1_ST_ADDRESS",
+      "override_type": "severity_escalation",
+      "original_severity": "WARNING",
+      "new_severity": "ERROR",
+      "reason": "Walmart requires full Ship-To address in all POs"
+    }
+  ],
+  "business_rules": [
+    {
+      "rule_id": "WALMART_BR_LEAD_TIME",
+      "description": "Walmart requires minimum 72-hour lead time between PO date and requested delivery date",
+      "severity": "WARNING",
+      "rule_type": "date_comparison",
+      "validation_logic": {
+        "date_1": {"segment": "BEG", "element": "05"},
+        "date_2": {"segment": "DTM", "element": "02", "qualifier": "010"},
+        "min_difference_hours": 72
+      },
+      "applies_to_doc_types": ["850"]
+    }
+  ]
+}

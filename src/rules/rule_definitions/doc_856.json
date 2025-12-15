@@ -1,0 +1,288 @@
+{
+  "ruleset_info": {
+    "name": "X12 856 Advance Ship Notice Rules",
+    "version": "1.0",
+    "description": "Document-specific validation rules for 856 ASN/Ship Notice transaction sets",
+    "scope": "document",
+    "doc_type": "856",
+    "x12_version": "004010"
+  },
+  "required_segments": [
+    {
+      "rule_id": "856_REQ_BSN",
+      "segment_id": "BSN",
+      "description": "Beginning Segment for Ship Notice is required",
+      "severity": "ERROR",
+      "min_occurrences": 1,
+      "max_occurrences": 1
+    },
+    {
+      "rule_id": "856_REQ_HL",
+      "segment_id": "HL",
+      "description": "At least one Hierarchical Level segment is required",
+      "severity": "ERROR",
+      "min_occurrences": 1,
+      "max_occurrences": null
+    }
+  ],
+  "element_rules": [
+    {
+      "rule_id": "856_BSN01_TRANS_PURPOSE",
+      "segment_id": "BSN",
+      "element_position": "01",
+      "description": "BSN01 Transaction Set Purpose Code must be valid",
+      "severity": "ERROR",
+      "validations": {
+        "data_type": "ID",
+        "min_length": 2,
+        "max_length": 2,
+        "allowed_values": ["00", "01", "02", "03", "04", "05", "06", "07", "08", "10", "11", "12", "13", "14", "15", "16", "17", "18", "19", "20", "CN"]
+      }
+    },
+    {
+      "rule_id": "856_BSN02_SHIPMENT_ID",
+      "segment_id": "BSN",
+      "element_position": "02",
+      "description": "BSN02 Shipment Identification is required",
+      "severity": "ERROR",
+      "validations": {
+        "data_type": "AN",
+        "min_length": 1,
+        "max_length": 30
+      }
+    },
+    {
+      "rule_id": "856_BSN03_DATE",
+      "segment_id": "BSN",
+      "element_position": "03",
+      "description": "BSN03 Date must be in CCYYMMDD format",
+      "severity": "ERROR",
+      "validations": {
+        "data_type": "DT",
+        "min_length": 8,
+        "max_length": 8,
+        "regex": "^[0-9]{8}$"
+      }
+    },
+    {
+      "rule_id": "856_BSN04_TIME",
+      "segment_id": "BSN",
+      "element_position": "04",
+      "description": "BSN04 Time must be in valid format when present",
+      "severity": "WARNING",
+      "validations": {
+        "data_type": "TM",
+        "min_length": 4,
+        "max_length": 8,
+        "regex": "^[0-9]{4,8}$"
+      }
+    },
+    {
+      "rule_id": "856_HL01_ID_NUMBER",
+      "segment_id": "HL",
+      "element_position": "01",
+      "description": "HL01 Hierarchical ID Number is required",
+      "severity": "ERROR",
+      "validations": {
+        "data_type": "AN",
+        "min_length": 1,
+        "max_length": 12
+      }
+    },
+    {
+      "rule_id": "856_HL03_LEVEL_CODE",
+      "segment_id": "HL",
+      "element_position": "03",
+      "description": "HL03 Hierarchical Level Code must be valid",
+      "severity": "ERROR",
+      "validations": {
+        "data_type": "ID",
+        "min_length": 1,
+        "max_length": 2,
+        "allowed_values": ["S", "O", "P", "I", "T"]
+      }
+    },
+    {
+      "rule_id": "856_TD501_ROUTING_METHOD",
+      "segment_id": "TD5",
+      "element_position": "01",
+      "description": "TD501 Routing Sequence Code must be valid when present",
+      "severity": "WARNING",
+      "validations": {
+        "data_type": "ID",
+        "min_length": 1,
+        "max_length": 2,
+        "allowed_values": ["B", "H", "I", "O", "R", "W"]
+      }
+    },
+    {
+      "rule_id": "856_TD502_ID_CODE_QUAL",
+      "segment_id": "TD5",
+      "element_position": "02",
+      "description": "TD502 Identification Code Qualifier must be valid when present",
+      "severity": "WARNING",
+      "validations": {
+        "data_type": "ID",
+        "min_length": 1,
+        "max_length": 2,
+        "allowed_values": ["1", "2", "3", "4", "10", "12", "ZZ"]
+      }
+    },
+    {
+      "rule_id": "856_N101_ENTITY_ID",
+      "segment_id": "N1",
+      "element_position": "01",
+      "description": "N101 Entity Identifier Code must be valid",
+      "severity": "ERROR",
+      "validations": {
+        "data_type": "ID",
+        "min_length": 2,
+        "max_length": 3,
+        "allowed_values": ["SF", "ST", "CN", "CA", "BT", "BY", "VN", "SH", "SO", "ZZ"]
+      }
+    },
+    {
+      "rule_id": "856_PRF01_PO_NUMBER",
+      "segment_id": "PRF",
+      "element_position": "01",
+      "description": "PRF01 Purchase Order Number is required",
+      "severity": "ERROR",
+      "validations": {
+        "data_type": "AN",
+        "min_length": 1,
+        "max_length": 22
+      }
+    },
+    {
+      "rule_id": "856_REF01_REFERENCE_QUAL",
+      "segment_id": "REF",
+      "element_position": "01",
+      "description": "REF01 Reference Identification Qualifier must be valid",
+      "severity": "ERROR",
+      "validations": {
+        "data_type": "ID",
+        "min_length": 2,
+        "max_length": 3,
+        "allowed_values": ["BM", "CN", "PK", "VN", "ZZ"]
+      }
+    },
+    {
+      "rule_id": "856_DTM01_DATE_QUAL",
+      "segment_id": "DTM",
+      "element_position": "01",
+      "description": "DTM01 Date/Time Qualifier must be valid",
+      "severity": "ERROR",
+      "validations": {
+        "data_type": "ID",
+        "min_length": 3,
+        "max_length": 3,
+        "allowed_values": ["011", "017", "063", "064", "065", "066", "067", "068", "077"]
+      }
+    }
+  ],
+  "conditional_rules": [
+    {
+      "rule_id": "856_COND_HL_S_CARRIER",
+      "description": "If HL segment has level code 'S' (Shipment), TD5 carrier details are recommended",
+      "severity": "WARNING",
+      "condition": {
+        "if_segment": "HL",
+        "if_element": "03",
+        "if_value": "S"
+      },
+      "then": {
+        "recommended_segments": ["TD5"],
+        "within_loop": "HL",
+        "message": "Shipment level should include TD5 carrier details"
+      }
+    },
+    {
+      "rule_id": "856_COND_HL_O_PRF",
+      "description": "If HL segment has level code 'O' (Order), PRF purchase order reference is required",
+      "severity": "ERROR",
+      "condition": {
+        "if_segment": "HL",
+        "if_element": "03",
+        "if_value": "O"
+      },
+      "then": {
+        "required_segments": ["PRF"],
+        "within_loop": "HL",
+        "message": "Order level requires PRF purchase order reference"
+      }
+    },
+    {
+      "rule_id": "856_COND_HL_I_LIN",
+      "description": "If HL segment has level code 'I' (Item), LIN item identification is recommended",
+      "severity": "WARNING",
+      "condition": {
+        "if_segment": "HL",
+        "if_element": "03",
+        "if_value": "I"
+      },
+      "then": {
+        "recommended_segments": ["LIN"],
+        "within_loop": "HL",
+        "message": "Item level should include LIN item identification"
+      }
+    },
+    {
+      "rule_id": "856_COND_N1_SF_ADDRESS",
+      "description": "If N1 segment has SF qualifier (Ship From), N3 and N4 are recommended",
+      "severity": "WARNING",
+      "condition": {
+        "if_segment": "N1",
+        "if_element": "01",
+        "if_value": "SF"
+      },
+      "then": {
+        "recommended_segments": ["N3", "N4"],
+        "within_loop": "N1",
+        "message": "Ship-From location should include N3 (address) and N4 (city/state/zip)"
+      }
+    }
+  ],
+  "cross_segment_rules": [
+    {
+      "rule_id": "856_CROSS_HL_HIERARCHY",
+      "description": "HL segments must maintain proper hierarchical structure (S → O → P/I)",
+      "severity": "ERROR",
+      "segments_involved": ["HL"],
+      "validation_logic": {
+        "type": "hierarchy_validation",
+        "segment_id": "HL",
+        "parent_element": "02",
+        "id_element": "01",
+        "level_element": "03",
+        "valid_hierarchy": {
+          "S": ["O", "P"],
+          "O": ["I", "P"],
+          "P": ["I"],
+          "I": []
+        },
+        "message": "HL hierarchical levels must follow valid parent-child relationships"
+      }
+    },
+    {
+      "rule_id": "856_CROSS_N1_SF_REQUIRED",
+      "description": "At least one N1 segment with SF (Ship From) qualifier should be present",
+      "severity": "WARNING",
+      "segments_involved": ["N1"],
+      "validation_logic": {
+        "type": "element_value_exists",
+        "segment_id": "N1",
+        "element_position": "01",
+        "required_value": "SF",
+        "message": "ASN should contain Ship-From location (N1*SF)"
+      }
+    }
+  ],
+  "segment_sequences": [
+    {
+      "rule_id": "856_SEQ_HL_SHIPMENT",
+      "description": "Shipment HL loop should contain: HL, TD5, REF, DTM, N1",
+      "severity": "INFO",
+      "sequence": ["HL", "TD5?", "REF*", "DTM*", "N1*"]
+    }
+  ]
+}

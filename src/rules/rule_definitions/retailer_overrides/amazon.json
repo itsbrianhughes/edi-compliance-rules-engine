@@ -1,0 +1,237 @@
+{
+  "ruleset_info": {
+    "name": "Amazon EDI Compliance Requirements",
+    "version": "1.0",
+    "description": "Amazon-specific EDI validation rules and requirements",
+    "scope": "retailer_override",
+    "retailer": "amazon",
+    "applies_to": ["850", "856", "810"]
+  },
+  "required_segments": [
+    {
+      "rule_id": "AMAZON_REQ_REF_IA",
+      "segment_id": "REF",
+      "description": "Amazon requires internal order number (REF*IA)",
+      "severity": "ERROR",
+      "min_occurrences": 1,
+      "max_occurrences": 1,
+      "element_filters": {
+        "01": "IA"
+      },
+      "applies_to_doc_types": ["850"]
+    },
+    {
+      "rule_id": "AMAZON_REQ_DTM_002",
+      "segment_id": "DTM",
+      "description": "Amazon requires delivery date (DTM*002)",
+      "severity": "ERROR",
+      "min_occurrences": 1,
+      "max_occurrences": 1,
+      "element_filters": {
+        "01": "002"
+      },
+      "applies_to_doc_types": ["850"]
+    },
+    {
+      "rule_id": "AMAZON_856_REQ_DTM_011",
+      "segment_id": "DTM",
+      "description": "Amazon requires ship date (DTM*011) in ASN",
+      "severity": "ERROR",
+      "min_occurrences": 1,
+      "max_occurrences": 1,
+      "element_filters": {
+        "01": "011"
+      },
+      "applies_to_doc_types": ["856"]
+    }
+  ],
+  "element_rules": [
+    {
+      "rule_id": "AMAZON_BEG03_PO_PREFIX",
+      "segment_id": "BEG",
+      "element_position": "03",
+      "description": "Amazon PO numbers must contain alphanumeric characters",
+      "severity": "ERROR",
+      "validations": {
+        "data_type": "AN",
+        "min_length": 8,
+        "max_length": 22,
+        "regex": "^[A-Z0-9\\-]+$"
+      },
+      "applies_to_doc_types": ["850"]
+    },
+    {
+      "rule_id": "AMAZON_PO106_QUAL_ASIN",
+      "segment_id": "PO1",
+      "element_position": "06",
+      "description": "Amazon accepts ASIN (Amazon Standard Identification Number)",
+      "severity": "WARNING",
+      "validations": {
+        "data_type": "ID",
+        "allowed_values": ["VP", "UP", "UK", "A3"]
+      },
+      "applies_to_doc_types": ["850"]
+    },
+    {
+      "rule_id": "AMAZON_N103_FC_CODE",
+      "segment_id": "N1",
+      "element_position": "03",
+      "description": "Amazon fulfillment centers use qualifier 'A2'",
+      "severity": "WARNING",
+      "validations": {
+        "data_type": "ID",
+        "allowed_values": ["92", "A2"]
+      },
+      "conditional": {
+        "if_element": "01",
+        "equals": "ST"
+      },
+      "applies_to_doc_types": ["850", "856"]
+    },
+    {
+      "rule_id": "AMAZON_N104_FC_FORMAT",
+      "segment_id": "N1",
+      "element_position": "04",
+      "description": "Amazon FC codes are 3-4 uppercase letters",
+      "severity": "WARNING",
+      "validations": {
+        "regex": "^[A-Z]{3,4}[0-9]?$"
+      },
+      "conditional": {
+        "if_element": "03",
+        "equals": "A2"
+      },
+      "applies_to_doc_types": ["850", "856"]
+    },
+    {
+      "rule_id": "AMAZON_856_PRF01_REQUIRED",
+      "segment_id": "PRF",
+      "element_position": "01",
+      "description": "Amazon requires PO number in PRF segment",
+      "severity": "ERROR",
+      "validations": {
+        "data_type": "AN",
+        "min_length": 1,
+        "max_length": 22,
+        "required": true
+      },
+      "applies_to_doc_types": ["856"]
+    },
+    {
+      "rule_id": "AMAZON_810_BIG02_INV_FORMAT",
+      "segment_id": "BIG",
+      "element_position": "02",
+      "description": "Amazon invoice numbers should follow vendor naming convention",
+      "severity": "WARNING",
+      "validations": {
+        "data_type": "AN",
+        "max_length": 22
+      },
+      "applies_to_doc_types": ["810"]
+    }
+  ],
+  "conditional_rules": [
+    {
+      "rule_id": "AMAZON_COND_PO1_ASIN",
+      "description": "Amazon recommends including ASIN when available",
+      "severity": "INFO",
+      "condition": {
+        "if_segment": "PO1",
+        "if_element": "06",
+        "if_value": "VP"
+      },
+      "then": {
+        "recommended_element": {
+          "segment": "PO1",
+          "element": "08",
+          "value": "A3"
+        },
+        "message": "Amazon recommends including ASIN (PO108=A3) when available"
+      },
+      "applies_to_doc_types": ["850"]
+    },
+    {
+      "rule_id": "AMAZON_COND_856_BOL",
+      "description": "Amazon requires BOL number for shipments",
+      "severity": "ERROR",
+      "condition": {
+        "if_segment": "HL",
+        "if_element": "03",
+        "if_value": "S"
+      },
+      "then": {
+        "required_segments": ["REF"],
+        "required_element_value": {
+          "segment": "REF",
+          "element": "01",
+          "value": "BM"
+        },
+        "within_loop": "HL",
+        "message": "Shipment level requires BOL number (REF*BM)"
+      },
+      "applies_to_doc_types": ["856"]
+    },
+    {
+      "rule_id": "AMAZON_COND_856_TRACKING",
+      "description": "Amazon requires tracking number for parcel shipments",
+      "severity": "ERROR",
+      "condition": {
+        "if_segment": "TD5",
+        "if_element": "04",
+        "if_value_exists": true
+      },
+      "then": {
+        "required_segments": ["REF"],
+        "required_element_value": {
+          "segment": "REF",
+          "element": "01",
+          "value": "CN"
+        },
+        "message": "Parcel shipments require tracking number (REF*CN)"
+      },
+      "applies_to_doc_types": ["856"]
+    }
+  ],
+  "cross_segment_rules": [
+    {
+      "rule_id": "AMAZON_CROSS_N1_FC",
+      "description": "Amazon shipments must include fulfillment center as Ship-To",
+      "severity": "ERROR",
+      "segments_involved": ["N1"],
+      "validation_logic": {
+        "type": "element_value_exists",
+        "segment_id": "N1",
+        "element_position": "01",
+        "required_value": "ST",
+        "message": "Amazon orders require Ship-To location (N1*ST)"
+      },
+      "applies_to_doc_types": ["850", "856"]
+    }
+  ],
+  "overrides": [
+    {
+      "rule_id": "850_N103_ID_CODE_QUAL",
+      "override_type": "add_allowed_value",
+      "new_allowed_values": ["A2"],
+      "reason": "Amazon uses A2 qualifier for fulfillment center codes"
+    }
+  ],
+  "business_rules": [
+    {
+      "rule_id": "AMAZON_BR_CASE_PACK",
+      "description": "Amazon may require case pack quantity in PID segment for FBA shipments",
+      "severity": "INFO",
+      "rule_type": "informational",
+      "message": "FBA shipments should include case pack quantities when applicable",
+      "applies_to_doc_types": ["856"]
+    },
+    {
+      "rule_id": "AMAZON_BR_CARRIER_ROUTING",
+      "description": "Amazon may provide carrier routing instructions in N9 segments",
+      "severity": "INFO",
+      "rule_type": "informational",
+      "message": "Follow carrier routing codes provided in N9 segments when present",
+      "applies_to_doc_types": ["850"]
+    }
+  ]
+}

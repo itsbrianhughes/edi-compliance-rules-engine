@@ -1,0 +1,316 @@
+{
+  "ruleset_info": {
+    "name": "Target EDI Compliance Requirements",
+    "version": "1.0",
+    "description": "Target-specific EDI validation rules and requirements",
+    "scope": "retailer_override",
+    "retailer": "target",
+    "applies_to": ["850", "856", "810"]
+  },
+  "required_segments": [
+    {
+      "rule_id": "TARGET_REQ_REF_DP",
+      "segment_id": "REF",
+      "description": "Target requires department number (REF*DP)",
+      "severity": "ERROR",
+      "min_occurrences": 1,
+      "max_occurrences": 1,
+      "element_filters": {
+        "01": "DP"
+      },
+      "applies_to_doc_types": ["850", "810"]
+    },
+    {
+      "rule_id": "TARGET_REQ_DTM_010",
+      "segment_id": "DTM",
+      "description": "Target requires requested ship date (DTM*010)",
+      "severity": "ERROR",
+      "min_occurrences": 1,
+      "max_occurrences": 1,
+      "element_filters": {
+        "01": "010"
+      },
+      "applies_to_doc_types": ["850"]
+    },
+    {
+      "rule_id": "TARGET_REQ_DTM_002",
+      "segment_id": "DTM",
+      "description": "Target requires delivery date (DTM*002)",
+      "severity": "ERROR",
+      "min_occurrences": 1,
+      "max_occurrences": 1,
+      "element_filters": {
+        "01": "002"
+      },
+      "applies_to_doc_types": ["850"]
+    },
+    {
+      "rule_id": "TARGET_856_REQ_REF_BM",
+      "segment_id": "REF",
+      "description": "Target requires Bill of Lading (REF*BM)",
+      "severity": "ERROR",
+      "min_occurrences": 1,
+      "max_occurrences": 1,
+      "element_filters": {
+        "01": "BM"
+      },
+      "applies_to_doc_types": ["856"]
+    }
+  ],
+  "element_rules": [
+    {
+      "rule_id": "TARGET_BEG03_PO_FORMAT",
+      "segment_id": "BEG",
+      "element_position": "03",
+      "description": "Target PO numbers are 10 digits",
+      "severity": "ERROR",
+      "validations": {
+        "data_type": "AN",
+        "min_length": 10,
+        "max_length": 10,
+        "regex": "^[0-9]{10}$"
+      },
+      "applies_to_doc_types": ["850"]
+    },
+    {
+      "rule_id": "TARGET_N103_STORE_QUAL",
+      "segment_id": "N1",
+      "element_position": "03",
+      "description": "Target uses qualifier '92' for store locations",
+      "severity": "ERROR",
+      "validations": {
+        "data_type": "ID",
+        "allowed_values": ["92", "UL"]
+      },
+      "conditional": {
+        "if_element": "01",
+        "equals": "ST"
+      },
+      "applies_to_doc_types": ["850", "856", "810"]
+    },
+    {
+      "rule_id": "TARGET_N104_STORE_FORMAT",
+      "segment_id": "N1",
+      "element_position": "04",
+      "description": "Target store numbers are 4 digits (T followed by 3 digits)",
+      "severity": "ERROR",
+      "validations": {
+        "data_type": "AN",
+        "min_length": 4,
+        "max_length": 4,
+        "regex": "^T[0-9]{3}$|^[0-9]{4}$"
+      },
+      "conditional": {
+        "if_element": "03",
+        "equals": "92"
+      },
+      "applies_to_doc_types": ["850", "856", "810"]
+    },
+    {
+      "rule_id": "TARGET_N104_DC_FORMAT",
+      "segment_id": "N1",
+      "element_position": "04",
+      "description": "Target DC codes follow specific format",
+      "severity": "WARNING",
+      "validations": {
+        "regex": "^[0-9]{4}$"
+      },
+      "conditional": {
+        "if_element": "03",
+        "equals": "UL"
+      },
+      "applies_to_doc_types": ["850", "856"]
+    },
+    {
+      "rule_id": "TARGET_REF02_DEPT",
+      "segment_id": "REF",
+      "element_position": "02",
+      "description": "Target department numbers are 3 digits",
+      "severity": "ERROR",
+      "validations": {
+        "data_type": "AN",
+        "min_length": 3,
+        "max_length": 3,
+        "regex": "^[0-9]{3}$"
+      },
+      "conditional": {
+        "if_element": "01",
+        "equals": "DP"
+      },
+      "applies_to_doc_types": ["850", "810"]
+    },
+    {
+      "rule_id": "TARGET_PO106_QUAL",
+      "segment_id": "PO1",
+      "element_position": "06",
+      "description": "Target requires specific product ID qualifiers",
+      "severity": "ERROR",
+      "validations": {
+        "data_type": "ID",
+        "allowed_values": ["VP", "UP", "UK", "UA"]
+      },
+      "applies_to_doc_types": ["850"]
+    },
+    {
+      "rule_id": "TARGET_PO108_DPCI",
+      "segment_id": "PO1",
+      "element_position": "08",
+      "description": "Target DPCI qualifier when provided",
+      "severity": "WARNING",
+      "validations": {
+        "data_type": "ID",
+        "allowed_values": ["UA"]
+      },
+      "applies_to_doc_types": ["850"]
+    },
+    {
+      "rule_id": "TARGET_856_BSN01_PURPOSE",
+      "segment_id": "BSN",
+      "element_position": "01",
+      "description": "Target only accepts purpose code 00 (Original)",
+      "severity": "ERROR",
+      "validations": {
+        "data_type": "ID",
+        "allowed_values": ["00"]
+      },
+      "applies_to_doc_types": ["856"]
+    },
+    {
+      "rule_id": "TARGET_810_BIG02_INV_FORMAT",
+      "segment_id": "BIG",
+      "element_position": "02",
+      "description": "Target invoice numbers should not exceed 22 characters",
+      "severity": "ERROR",
+      "validations": {
+        "data_type": "AN",
+        "max_length": 22
+      },
+      "applies_to_doc_types": ["810"]
+    }
+  ],
+  "conditional_rules": [
+    {
+      "rule_id": "TARGET_COND_PO1_DPCI",
+      "description": "Target recommends including DPCI (Department/Class/Item) when available",
+      "severity": "WARNING",
+      "condition": {
+        "if_segment": "PO1",
+        "if_element": "06",
+        "if_value": "VP"
+      },
+      "then": {
+        "recommended_element": {
+          "segment": "PO1",
+          "element": "08",
+          "value": "UA"
+        },
+        "message": "Target recommends including DPCI (PO108=UA) when available"
+      },
+      "applies_to_doc_types": ["850"]
+    },
+    {
+      "rule_id": "TARGET_COND_856_CARTON",
+      "description": "Target requires carton details at pack level",
+      "severity": "ERROR",
+      "condition": {
+        "if_segment": "HL",
+        "if_element": "03",
+        "if_value": "P"
+      },
+      "then": {
+        "required_segments": ["MAN"],
+        "within_loop": "HL",
+        "message": "Pack level (HL*P) requires MAN segment with carton ID"
+      },
+      "applies_to_doc_types": ["856"]
+    },
+    {
+      "rule_id": "TARGET_COND_N1_ST_ADDRESS",
+      "description": "Target requires full address for Ship-To locations",
+      "severity": "ERROR",
+      "condition": {
+        "if_segment": "N1",
+        "if_element": "01",
+        "if_value": "ST"
+      },
+      "then": {
+        "required_segments": ["N3", "N4"],
+        "within_loop": "N1",
+        "message": "Ship-To location requires N3 (street address) and N4 (city/state/zip)"
+      },
+      "applies_to_doc_types": ["850", "856", "810"]
+    }
+  ],
+  "cross_segment_rules": [
+    {
+      "rule_id": "TARGET_CROSS_N1_STORE",
+      "description": "Target orders must include either Store (ST) or DC location",
+      "severity": "ERROR",
+      "segments_involved": ["N1"],
+      "validation_logic": {
+        "type": "element_value_exists",
+        "segment_id": "N1",
+        "element_position": "01",
+        "required_value": "ST",
+        "message": "Target orders require Ship-To location (N1*ST)"
+      },
+      "applies_to_doc_types": ["850", "856"]
+    },
+    {
+      "rule_id": "TARGET_CROSS_DTM_DATES",
+      "description": "Target requires ship date to be before delivery date",
+      "severity": "ERROR",
+      "segments_involved": ["DTM"],
+      "validation_logic": {
+        "type": "date_sequence",
+        "earlier_date": {
+          "segment": "DTM",
+          "element": "02",
+          "qualifier_element": "01",
+          "qualifier_value": "010"
+        },
+        "later_date": {
+          "segment": "DTM",
+          "element": "02",
+          "qualifier_element": "01",
+          "qualifier_value": "002"
+        },
+        "message": "Ship date (DTM*010) must be before delivery date (DTM*002)"
+      },
+      "applies_to_doc_types": ["850"]
+    }
+  ],
+  "overrides": [
+    {
+      "rule_id": "850_COND_N1_ST_ADDRESS",
+      "override_type": "severity_escalation",
+      "original_severity": "WARNING",
+      "new_severity": "ERROR",
+      "reason": "Target requires full Ship-To address in all documents"
+    },
+    {
+      "rule_id": "850_N103_ID_CODE_QUAL",
+      "override_type": "add_allowed_value",
+      "new_allowed_values": ["UL"],
+      "reason": "Target uses UL qualifier for distribution center locations"
+    }
+  ],
+  "business_rules": [
+    {
+      "rule_id": "TARGET_BR_WINDOW_DELIVERY",
+      "description": "Target may specify delivery windows; follow DTM segment instructions",
+      "severity": "INFO",
+      "rule_type": "informational",
+      "message": "Target delivery windows should be honored when specified in DTM segments",
+      "applies_to_doc_types": ["850"]
+    },
+    {
+      "rule_id": "TARGET_BR_ROUTING_GUIDE",
+      "description": "Target routing guide compliance required for freight shipments",
+      "severity": "WARNING",
+      "rule_type": "informational",
+      "message": "Follow Target's routing guide for LTL/Truckload shipments",
+      "applies_to_doc_types": ["856"]
+    }
+  ]
+}
