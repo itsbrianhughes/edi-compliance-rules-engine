@@ -24,6 +24,27 @@ The EDI Compliance Rules Engine validates EDI X12 documents against industry sta
 - 🚀 Pre-transmission quality gates in integration pipelines
 - 🛠️ Development and debugging of EDI documents
 
+## Why this exists (real-world onboarding)
+
+Many teams think “we’re compliant” because their EDI passes basic validation.
+
+Retailers disagree.
+
+This project simulates the reality that causes rejections and chargebacks:
+- mandatory references
+- conditional segments
+- code list enforcement
+- cross-field consistency checks
+
+It’s built to demonstrate how production onboarding teams actually evaluate documents.
+
+## What this demonstrates in a Solutions Engineer interview
+
+- Requirements thinking (“what does the customer *actually* need to pass?”)
+- Explaining constraints to non-technical stakeholders
+- Turning rules into testable checks
+- Producing customer-friendly outputs (reports + next actions)
+
 ## Features
 
 ### Core Capabilities
